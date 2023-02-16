@@ -159,6 +159,7 @@ li {
   align-items: center;
   width: 100%;
   z-index: 9999;
+  height: 0px; 
 }
 
 ul,

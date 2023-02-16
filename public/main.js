@@ -37,7 +37,10 @@ usesrActorName.addEventListener('keydown', (e) => {
     }
   })
 usesrActorName.addEventListener('blur', getActorId)
-searchBtnEl.addEventListener('click', getMovies)
+searchBtnEl.addEventListener('click', async e => {
+    await getActorId()
+    getMovies()
+})
 rightBtnArrow.addEventListener('click', nextMoviePage)
 leftBtnArrow.addEventListener('click', perviousMoviePage)
 searchAgainBtn.addEventListener('click', searchAgainReset)
@@ -108,6 +111,7 @@ async function getMovies() {
         const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
         const data = await response.json()
         console.log(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
+        console.log(response)
         console.log(data)
         pageTotal = data.total_pages
         moviesInfo = data.results
