@@ -30,6 +30,12 @@ backToTopBtn.onclick = function () {
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault()
 })
+
+usesrActorName.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  })
 usesrActorName.addEventListener('blur', getActorId)
 searchBtnEl.addEventListener('click', getMovies)
 rightBtnArrow.addEventListener('click', nextMoviePage)
@@ -83,7 +89,7 @@ async function getActorId() {
         const response = await fetch(`https://api.themoviedb.org/3/search/person?api_key=3bd6d50a0681c06a9878c9c95e57ae68&language=en-US&query=${actor}`)
         const data = await response.json()
         if (actor === '') {
-            actorId = 0
+            actorId = ''
         } else {
             actorId = data.results[0].id
         }
