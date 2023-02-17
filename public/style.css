@@ -216,6 +216,14 @@ li {
   background-color: #b30014;
 }
 
+.displayUserInputs {
+  border: 2px solid #555;
+}
+
+.displayUserInputs h1 {
+  font-size: 2rem;
+}
+
 .hidden {
   display: none;
 }

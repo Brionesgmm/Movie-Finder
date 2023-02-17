@@ -9,6 +9,7 @@ const backToTopBtn = document.getElementById("back-to-top")
 const leftBtnArrow = document.querySelector('.left-btn')
 const rightBtnArrow = document.querySelector('.right-btn')
 const searchAgainBtn = document.querySelector('.search-again')
+const displayUserInputsSection = document.querySelector('.displayUserInputs')
 
 let buttons
 let genresArray = []
@@ -21,6 +22,8 @@ let moviesInfo = []
 let moviesHTML = ''
 let currentPage = 1
 let searchGenres
+let actorNameDisplay = ''
+let genresUserInputs = []
 
 backToTopBtn.onclick = function () {
     document.body.scrollTop = 0;
@@ -78,6 +81,7 @@ function checkSelectedButtons() {
                 console.log(selectedGenres)
             } else {
                 button.classList.add('selected')
+                genresUserInputs.push(button.textContent)
                 selectedGenres.push(button.value)
                 console.log(selectedGenres)
             }
@@ -87,6 +91,10 @@ function checkSelectedButtons() {
 
 async function getActorId() {
     actor = usesrActorName.value.toLowerCase().trim().split(' ').join('+')
+    actorNameDisplay = usesrActorName.value.toLowerCase().split(' ').map(el => {
+        return el.charAt(0).toUpperCase() + el.slice(1)
+    }).join(' ')
+    console.log(actorNameDisplay)
     console.log(actor)
     try {
         const response = await fetch(`https://api.themoviedb.org/3/search/person?api_key=3bd6d50a0681c06a9878c9c95e57ae68&language=en-US&query=${actor}`)
@@ -118,6 +126,7 @@ async function getMovies() {
         console.log(pageTotal)
         console.log(moviesInfo)
         moviesHTML = ''
+        showUserInputs()
         removeSearchAndAddArrows()
         showMovies()
     } catch (err) {
@@ -189,11 +198,26 @@ async function perviousMoviePage() {
     }
 }
 
+function showUserInputs(){
+    displayUserInputsSection.classList.remove('hidden')
+    let genresUserInputsHTML = ''
+    console.log(genresUserInputs)
+    genresUserInputs.forEach(el => {
+        console.log(el)
+        genresUserInputsHTML += `${genresUserInputs.indexOf(el) !== genresUserInputs.length - 1 ? `${el}/ `: `${el}`}`
+    })
+    displayUserInputsSection.innerHTML = `
+    <h1>${actorNameDisplay}</h2>
+    <h2>${genresUserInputsHTML}</h2>
+    `
+}
+
 function searchAgainReset() {
     searchForm.classList.remove("hidden")
     nextBackArrows.classList.add('hidden')
     searchAgainBtn.classList.add('hidden')
     backToTopBtn.classList.add('hidden')
+    displayUserInputsSection.classList.add('hidden')
     moviesSection.innerHTML = ''
     buttons.forEach(button => {
         button.classList.remove('selected')
@@ -203,6 +227,9 @@ function searchAgainReset() {
     actor = ''
     actorId = ''
     currentPage = 1
+    displayUserInputsSection.innerHTML = ''
+    genresUserInputs = []
 }
+
 
 getGenres()
