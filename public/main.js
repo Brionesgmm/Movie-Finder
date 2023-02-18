@@ -232,4 +232,5 @@ function searchAgainReset() {
 }
 
 
+
 getGenres()
