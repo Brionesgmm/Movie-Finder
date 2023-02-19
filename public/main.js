@@ -10,6 +10,13 @@ const leftBtnArrow = document.querySelector('.left-btn')
 const rightBtnArrow = document.querySelector('.right-btn')
 const searchAgainBtn = document.querySelector('.search-again')
 const displayUserInputsSection = document.querySelector('.displayUserInputs')
+const tvPickBtn = document.querySelector('.tvButton')
+const moviePickBtn = document.querySelector('.movieButton')
+const actorsSuggestionsList = document.querySelector('.actorsSuggestions')
+const tvMovieAreaSection = document.querySelector('.tvMovieArea')
+const tvMovieChoiceArea = document.querySelector('.pickTvMovie')
+const usesrActorNameLabel = document.querySelector('label')
+const backToMovieTvSelectionArea = document.querySelector('.backToTVMovieChoice')
 
 let buttons
 let genresArray = []
@@ -24,6 +31,57 @@ let currentPage = 1
 let searchGenres
 let actorNameDisplay = ''
 let genresUserInputs = []
+let mediaType = 'movie'
+
+usesrActorName.addEventListener("input", (event) => {
+    const inputText = usesrActorName.value.toLowerCase();
+    const filteredActors = actorName.filter(actor => actor.toLowerCase().includes(inputText));
+    actorsSuggestionsList.innerHTML = '';
+    filteredActors.forEach(actor => {
+        const li = document.createElement('li');
+        li.textContent = actor;
+        li.addEventListener('click', () => {
+            usesrActorName.value = actor;
+            actorsSuggestionsList.innerHTML = '';
+        });
+        actorsSuggestionsList.appendChild(li);
+    });
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target !== usesrActorName) {
+        actorsSuggestionsList.innerHTML = '';
+    }
+})
+
+tvPickBtn.addEventListener('click', e => {
+    tvMovieChoiceArea.classList.add("hidden")
+    mediaType = 'tv'
+    buttonHTML = ''
+    genresSection.innerHTML = ''
+    tvMovieAreaSection.classList.remove('hidden')
+    usesrActorName.classList.add('hidden')
+    usesrActorNameLabel.classList.add('hidden')
+    getGenres()
+})
+
+moviePickBtn.addEventListener('click', e => {
+    tvMovieChoiceArea.classList.add("hidden")
+    mediaType = 'movie'
+    buttonHTML = ''
+    genresSection.innerHTML = ''
+    tvMovieAreaSection.classList.remove('hidden')
+    usesrActorName.classList.remove('hidden')
+    usesrActorNameLabel.classList.remove('hidden')
+    getGenres()
+})
+
+backToMovieTvSelectionArea.addEventListener('click', e => {
+    tvMovieChoiceArea.classList.remove("hidden")
+    tvMovieAreaSection.classList.add("hidden")
+    selectedGenres = []
+    genresUserInputs = []
+})
 
 backToTopBtn.onclick = function () {
     document.body.scrollTop = 0;
@@ -36,9 +94,9 @@ searchForm.addEventListener('submit', (e) => {
 
 usesrActorName.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
+        e.preventDefault();
     }
-  })
+})
 usesrActorName.addEventListener('blur', getActorId)
 searchBtnEl.addEventListener('click', async e => {
     await getActorId()
@@ -50,7 +108,7 @@ searchAgainBtn.addEventListener('click', searchAgainReset)
 
 async function getGenres() {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=3bd6d50a0681c06a9878c9c95e57ae68&language=en-US`)
+        const response = await fetch(`https://api.themoviedb.org/3/genre/${mediaType}/list?api_key=3bd6d50a0681c06a9878c9c95e57ae68&language=en-US`)
         const data = await response.json()
         genresArray = data.genres
         console.log(genresArray)
@@ -116,9 +174,9 @@ async function getMovies() {
         return `${el}|`
     }).join('')
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
+        const response = await fetch(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
         const data = await response.json()
-        console.log(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
+        console.log(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
         console.log(response)
         console.log(data)
         pageTotal = data.total_pages
@@ -126,6 +184,7 @@ async function getMovies() {
         console.log(pageTotal)
         console.log(moviesInfo)
         moviesHTML = ''
+        backToMovieTvSelectionArea.classList.add('hidden')
         showUserInputs()
         removeSearchAndAddArrows()
         showMovies()
@@ -135,14 +194,25 @@ async function getMovies() {
 }
 
 function showMovies() {
-    moviesInfo.forEach(el => {
-        moviesHTML += `
-            <article class='movie'>
-                <h1>${el.title}</h1>
-                <img src='https://image.tmdb.org/t/p/w500${el.poster_path}' alt='${el.title} movie poster'>
-                <p>${el.overview}</p>
-            </article>`
-    })
+    if (mediaType === 'movie') {
+        moviesInfo.forEach(el => {
+            moviesHTML += `
+                <article class='movie'>
+                    <h1>${el.title}</h1>
+                    <img src='https://image.tmdb.org/t/p/w500${el.poster_path}' alt='${el.title} movie poster'>
+                    <p>${el.overview}</p>
+                </article>`
+        })
+    } else {
+        moviesInfo.forEach(el => {
+            moviesHTML += `
+                <article class='movie'>
+                    <h1>${el.name}</h1>
+                    <img src='https://image.tmdb.org/t/p/w500${el.poster_path}' alt='${el.name} movie poster'>
+                    <p>${el.overview}</p>
+                </article>`
+        })
+    }
     moviesSection.innerHTML = moviesHTML
 }
 
@@ -162,9 +232,9 @@ async function nextMoviePage() {
         if (currentPage > pageTotal) {
             currentPage = 1
         }
-        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
+        const response = await fetch(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
         const data = await response.json()
-        console.log(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
+        console.log(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=1`)
         console.log(data)
         moviesInfo = data.results
         moviesHTML = ''
@@ -180,15 +250,15 @@ async function perviousMoviePage() {
         if (pageTotal === 1) {
             currentPage = 1
         } else if (currentPage < 1) {
-            if(pageTotal >= 500){
+            if (pageTotal >= 500) {
                 currentPage = 500
-            }else{
+            } else {
                 currentPage = pageTotal
             }
         }
-        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
+        const response = await fetch(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
         const data = await response.json()
-        console.log(`https://api.themoviedb.org/3/discover/movie?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
+        console.log(`https://api.themoviedb.org/3/discover/${mediaType}?api_key=3bd6d50a0681c06a9878c9c95e57ae68&sort_by=popularity.desc&with_genres=${searchGenres}&with_cast=${actorId}&page=${currentPage}`)
         console.log(data)
         moviesInfo = data.results
         moviesHTML = ''
@@ -198,7 +268,7 @@ async function perviousMoviePage() {
     }
 }
 
-function showUserInputs(){
+function showUserInputs() {
     displayUserInputsSection.classList.remove('hidden')
     let genresUserInputsHTML = ''
     console.log(genresUserInputs)
@@ -229,8 +299,96 @@ function searchAgainReset() {
     currentPage = 1
     displayUserInputsSection.innerHTML = ''
     genresUserInputs = []
+    backToMovieTvSelectionArea.classList.remove('hidden')
 }
 
 
 
 getGenres()
+
+const actorName = [
+    "Adam Sandler",
+    "Aishwarya Rai Bachchan",
+    "Angelina Jolie",
+    "Anne Hathaway",
+    "Anthony Hopkins",
+    "Arnold Schwarzenegger",
+    "Ben Affleck",
+    "Brad Pitt",
+    "Cameron Diaz",
+    "Cate Blanchett",
+    "Charlize Theron",
+    "Chris Evans",
+    "Chris Hemsworth",
+    "Chris Pratt",
+    "Christian Bale",
+    "Dakota Johnson",
+    "Denzel Washington",
+    "Dwayne Johnson",
+    "Emma Stone",
+    "Emma Watson",
+    "Gal Gadot",
+    "George Clooney",
+    "Harrison Ford",
+    "Hugh Jackman",
+    "Jack Nicholson",
+    "Jackie Chan",
+    "Jake Gyllenhaal",
+    "Javier Bardem",
+    "Jennifer Aniston",
+    "Jennifer Lawrence",
+    "Jessica Alba",
+    "Jim Carrey",
+    "Joan Crawford",
+    "John Travolta",
+    "Johnny Depp",
+    "Judi Dench",
+    "Julia Roberts",
+    "Kate Winslet",
+    "Keanu Reeves",
+    "Kevin Hart",
+    "Kevin James",
+    "Keira Knightley",
+    "Kevin Costner",
+    "Leonardo DiCaprio",
+    "Liam Neeson",
+    "Marilyn Monroe",
+    "Mark Wahlberg",
+    "Matt Damon",
+    "Matthew McConaughey",
+    "Meryl Streep",
+    "Michael Caine",
+    "Mila Kunis",
+    "Morgan Freeman",
+    "Natalie Portman",
+    "Nicole Kidman",
+    "Owen Wilson",
+    "Penélope Cruz",
+    "Peter Sellers",
+    "Rachel McAdams",
+    "Reese Witherspoon",
+    "Robert De Niro",
+    "Robert Downey Jr.",
+    "Robin Williams",
+    "Russell Crowe",
+    "Ryan Gosling",
+    "Ryan Reynolds",
+    "Samuel L. Jackson",
+    "Scarlett Johansson",
+    "Sean Connery",
+    "Shah Rukh Khan",
+    "Sophia Loren",
+    "Steve Carell",
+    "Sylvester Stallone",
+    "Tim Allen",
+    "Tom Cruise",
+    "Tom Hanks",
+    "Tom Hardy",
+    "Uma Thurman",
+    "Viola Davis",
+    "Will Ferrell",
+    "Will Smith",
+    "Woody Allen",
+    "Zac Efron",
+    "Zoe Saldana"
+]

@@ -11,25 +11,33 @@
 
 <body>
     <main>
-        <button class="search-again hidden">Search Again</button>
-        <section class="displayUserInputs hidden">
+        <section class="pickTvMovie">
+            <button class="tvButton">TV<i class="fa-solid fa-tv"></i></button>
+            <button class="movieButton">Movie<i class="fa-solid fa-film"></i></i></button>
         </section>
-        <form>
-            <label for="actorName">Actor Name:</label>
-            <input type="text" id="actorName" name="actorName">
-            <section class="genres">
+        <section class="tvMovieArea hidden">
+            <button class="search-again hidden">Search Again</button>
+            <section class="displayUserInputs hidden">
+            </section>
+            <button class="backToTVMovieChoice">Back To Movie/TV</button>
+            <form>
+                <label for="actorName">Actor Name:</label>
+                <input type="text" id="actorName" name="actorName">
+                <ul class="actorsSuggestions"></ul>
+                <section class="genres">
+
+                </section>
+                <button type="submit" class="searchBtn">Search</button>
+            </form>
+            <section class='allMovies'>
 
             </section>
-            <button type="submit" class="searchBtn">Search</button>
-        </form>
-        <section class='allMovies'>
-
+            <ul class="pageButtons hidden">
+                <li class="left-btn"><i class="fa-solid fa-circle-arrow-left"></i></li>
+                <li class="right-btn"><i class="fa-solid fa-circle-arrow-right"></i></li>
+            </ul>
+            <button id="back-to-top" class="hidden">Back to top</button>
         </section>
-        <ul class="pageButtons hidden">
-            <li class="left-btn"><i class="fa-solid fa-circle-arrow-left"></i></li>
-            <li class="right-btn"><i class="fa-solid fa-circle-arrow-right"></i></li>
-        </ul>
-        <button id="back-to-top" class="hidden">Back to top</button>
     </main>
     <script src="main.js"></script>
     <script src="https://kit.fontawesome.com/c98de7a666.js" crossorigin="anonymous"></script>

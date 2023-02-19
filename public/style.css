@@ -118,7 +118,7 @@ label {
   align-items: center;
   margin: 1rem;
   text-align: center;
-  background-color: #B7C1D1 ;
+  background-color: #B7C1D1;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -159,7 +159,7 @@ li {
   align-items: center;
   width: 100%;
   z-index: 9999;
-  height: 0px; 
+  height: 0px;
 }
 
 ul,
@@ -183,7 +183,7 @@ li {
   margin-right: .5rem;
 }
 
-.search-again {
+.search-again, .backToTVMovieChoice {
   margin: 1rem;
   padding: 0.5rem 1rem;
   border: none;
@@ -195,7 +195,7 @@ li {
   cursor: pointer;
 }
 
-.search-again:hover {
+.search-again:hover, .backToTVMovieChoice:hover {
   background-color: #388E3C;
 }
 
@@ -222,6 +222,71 @@ li {
 
 .displayUserInputs h1 {
   font-size: 2rem;
+}
+
+.pickTvMovie {
+  display: flex;
+  justify-content: space-around;
+}
+
+.pickTvMovie button {
+  border: 2px solid #0070f3;
+  border-radius: 10px;
+  color: #0070f3;
+  background-color: white;
+  padding: 16px 24px;
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  max-width: 250px;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.pickTvMovie button:hover,
+.pickTvMovie button:focus    {
+  background-color: #0070f3;
+  color: #fff;
+}
+
+.pickTvMovie button:active {
+  background-color: #00549c;
+  color: #fff;
+  border-color: #00549c;
+}
+
+.pickTvMovie i {
+  display: block;
+  margin-top: .5rem;
+}
+
+.actorsSuggestions{
+  width: 100%;
+  background-color: #fff;
+  /* border: 1px solid #ddd; */
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.actorsSuggestions li {
+  border: 1px solid black;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.actorsSuggestions li:hover {
+  background-color: #0070f3;
+  color: #fff;
+}
+
+.actorsSuggestions li:active {
+  background-color: #0051a9;
+  color: #fff;
 }
 
 .hidden {
