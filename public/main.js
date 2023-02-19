@@ -81,6 +81,9 @@ backToMovieTvSelectionArea.addEventListener('click', e => {
     tvMovieAreaSection.classList.add("hidden")
     selectedGenres = []
     genresUserInputs = []
+    actor = ''
+    actorId = ''
+    usesrActorName.value = ''
 })
 
 backToTopBtn.onclick = function () {
